@@ -1,0 +1,1079 @@
+<title>AI Agent Landscape 2026</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;600&display=swap');
+
+  /* ── Token system ── */
+  :root {
+    --bg:          #F5F3EE;
+    --surface:     #EDEAE2;
+    --surface2:    #E3DFD5;
+    --border:      #C9C4B8;
+    --text:        #1A1A1E;
+    --text-muted:  #5A5752;
+    --accent:      #1B6047;
+    --accent-light:#E6F2EC;
+    --amber:       #C47D1A;
+    --amber-light: #FDF3E2;
+    --red:         #B53A2A;
+    --red-light:   #FAEAE7;
+    --blue:        #1A4A8C;
+    --blue-light:  #E6EEF9;
+    --purple:      #5A3A8C;
+    --purple-light:#EEE6F9;
+    --mono:        'JetBrains Mono', monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg:          #0E1117;
+      --surface:     #161B25;
+      --surface2:    #1D2535;
+      --border:      #2E3A4E;
+      --text:        #E8E4DC;
+      --text-muted:  #8A9AAD;
+      --accent:      #2A8C62;
+      --accent-light:#0E2A1E;
+      --amber:       #D4952A;
+      --amber-light: #2A1F0A;
+      --red:         #D4503A;
+      --red-light:   #2A1208;
+      --blue:        #3A72C4;
+      --blue-light:  #0E1E38;
+      --purple:      #7A5AC4;
+      --purple-light:#1E1238;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg:          #0E1117;
+    --surface:     #161B25;
+    --surface2:    #1D2535;
+    --border:      #2E3A4E;
+    --text:        #E8E4DC;
+    --text-muted:  #8A9AAD;
+    --accent:      #2A8C62;
+    --accent-light:#0E2A1E;
+    --amber:       #D4952A;
+    --amber-light: #2A1F0A;
+    --red:         #D4503A;
+    --red-light:   #2A1208;
+    --blue:        #3A72C4;
+    --blue-light:  #0E1E38;
+    --purple:      #7A5AC4;
+    --purple-light:#1E1238;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+  body {
+    margin: 0;
+    padding: 2rem 1rem;
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', system-ui, sans-serif;
+    font-size: 15px;
+    line-height: 1.65;
+    max-width: 1100px;
+    margin-inline: auto;
+  }
+  h1, h2, h3, h4 { font-family: 'Libre Baskerville', Georgia, serif; text-wrap: balance; margin-top: 0; }
+  h1 { font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 700; line-height: 1.15; margin-bottom: 0.25rem; }
+  h2 { font-size: clamp(1.2rem, 2.5vw, 1.6rem); font-weight: 700; margin-bottom: 0.75rem; border-bottom: 2px solid var(--border); padding-bottom: 0.4rem; margin-top: 2.5rem; }
+  h3 { font-size: 1.05rem; font-weight: 700; margin-bottom: 0.5rem; margin-top: 1.5rem; }
+  h4 { font-size: 0.9rem; font-weight: 700; color: var(--text-muted); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 0.35rem; margin-top: 0; font-family: 'DM Sans', sans-serif; }
+  p { margin-block: 0 0.9rem; }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  code, .mono { font-family: var(--mono); font-size: 0.82em; background: var(--surface2); border: 1px solid var(--border); padding: 0.1em 0.35em; border-radius: 3px; }
+
+  .report-header { border-left: 4px solid var(--accent); padding-left: 1.25rem; margin-bottom: 2rem; }
+  .report-meta { display: flex; flex-wrap: wrap; gap: 0.75rem 1.5rem; font-size: 0.82rem; color: var(--text-muted); font-family: var(--mono); margin-top: 0.75rem; letter-spacing: 0.02em; }
+
+  .callout { background: var(--surface); border: 1px solid var(--border); border-radius: 6px; padding: 1rem 1.25rem; margin-bottom: 1.5rem; font-size: 0.88rem; color: var(--text-muted); }
+  .callout.warning { background: var(--amber-light); border-color: var(--amber); color: var(--text); }
+  .callout.info    { background: var(--blue-light);  border-color: var(--blue);  color: var(--text); }
+  .callout.update  { background: var(--accent-light); border-color: var(--accent); color: var(--text); }
+  .callout strong  { color: var(--text); }
+
+  .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
+  .stat-tile { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 1rem 1.25rem; }
+  .stat-tile .num { font-family: var(--mono); font-size: 2rem; font-weight: 600; line-height: 1; color: var(--accent); display: block; margin-bottom: 0.25rem; }
+  .stat-tile .num.amber { color: var(--amber); }
+  .stat-tile .num.blue  { color: var(--blue); }
+  .stat-tile .num.red   { color: var(--red); }
+  .stat-tile .label { font-size: 0.78rem; color: var(--text-muted); font-weight: 500; text-transform: uppercase; letter-spacing: 0.05em; }
+
+  .badge { display: inline-block; font-size: 0.72rem; font-weight: 600; padding: 0.18em 0.6em; border-radius: 3px; letter-spacing: 0.03em; white-space: nowrap; font-family: 'DM Sans', sans-serif; text-transform: uppercase; }
+  .badge-public     { background: var(--accent-light); color: var(--accent);    border: 1px solid currentColor; }
+  .badge-enterprise { background: var(--blue-light);   color: var(--blue);      border: 1px solid currentColor; }
+  .badge-preview    { background: var(--amber-light);  color: var(--amber);     border: 1px solid currentColor; }
+  .badge-framework  { background: var(--surface2);     color: var(--text-muted);border: 1px solid var(--border); }
+  .badge-deprecated { background: var(--red-light);    color: var(--red);       border: 1px solid currentColor; }
+  .badge-research   { background: var(--purple-light); color: var(--purple);    border: 1px solid currentColor; }
+  .badge-yes        { background: var(--accent-light); color: var(--accent);    border: 1px solid currentColor; }
+  .badge-no         { background: var(--surface2);     color: var(--text-muted);border: 1px solid var(--border); }
+
+  .table-wrap { overflow-x: auto; margin-bottom: 2rem; border: 1px solid var(--border); border-radius: 8px; }
+  table { width: 100%; border-collapse: collapse; font-size: 0.83rem; min-width: 780px; }
+  thead { background: var(--surface2); }
+  th { text-align: left; padding: 0.6rem 0.75rem; font-weight: 600; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); white-space: nowrap; border-bottom: 2px solid var(--border); }
+  td { padding: 0.55rem 0.75rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: var(--surface); }
+  .company-group td { background: var(--surface); font-weight: 600; font-size: 0.78rem; color: var(--text-muted); letter-spacing: 0.04em; text-transform: uppercase; }
+  .company-group td:first-child { color: var(--text); font-weight: 700; }
+  .agent-name { font-weight: 600; }
+  .qualifies { font-size: 0.78rem; color: var(--text-muted); }
+
+  .section-intro { background: var(--surface); border: 1px solid var(--border); border-radius: 6px; padding: 1rem 1.25rem; margin-bottom: 1.5rem; font-size: 0.9rem; }
+
+  .calc-box { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 1.25rem 1.5rem; font-family: var(--mono); font-size: 0.83rem; line-height: 2; margin-bottom: 1.5rem; overflow-x: auto; }
+  .calc-box .total-line { border-top: 2px solid var(--border); margin-top: 0.5rem; padding-top: 0.5rem; font-weight: 600; font-size: 1rem; color: var(--accent); }
+  .calc-box .sub { color: var(--text-muted); }
+
+  .scenarios { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
+  .scenario { border: 1px solid var(--border); border-radius: 8px; padding: 1rem 1.25rem; }
+  .scenario .scenario-num { font-family: var(--mono); font-size: 1.8rem; font-weight: 600; line-height: 1; display: block; margin-bottom: 0.3rem; }
+  .scenario.low  { border-color: var(--blue);   background: var(--blue-light);  }
+  .scenario.low  .scenario-num { color: var(--blue); }
+  .scenario.mid  { border-color: var(--accent); background: var(--accent-light); }
+  .scenario.mid  .scenario-num { color: var(--accent); }
+  .scenario.high { border-color: var(--amber);  background: var(--amber-light); }
+  .scenario.high .scenario-num { color: var(--amber); }
+  .scenario .scenario-label { font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); }
+  .scenario .scenario-desc  { font-size: 0.82rem; margin-top: 0.5rem; }
+
+  .dedup-list { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 1.25rem 1.5rem; margin-bottom: 1.5rem; }
+  .dedup-list ul { margin: 0; padding-left: 1.25rem; }
+  .dedup-list li { margin-bottom: 0.6rem; font-size: 0.88rem; }
+  .dedup-list li:last-child { margin-bottom: 0; }
+
+  .sources { font-size: 0.8rem; color: var(--text-muted); }
+  .sources ul { padding-left: 1.25rem; columns: 2; column-gap: 1.5rem; }
+  .sources li { margin-bottom: 0.35rem; break-inside: avoid; }
+  @media (max-width: 500px) { .sources ul { columns: 1; } }
+
+  .confidence-bar { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; }
+  .bar-track { flex: 1; height: 8px; background: var(--surface2); border-radius: 4px; overflow: hidden; border: 1px solid var(--border); }
+  .bar-fill  { height: 100%; border-radius: 4px; }
+
+  hr { border: none; border-top: 1px solid var(--border); margin: 2rem 0; }
+  .note { font-size: 0.8rem; color: var(--text-muted); font-style: italic; }
+  ul { margin-block: 0 0.9rem; padding-left: 1.5rem; }
+  li { margin-bottom: 0.35rem; }
+</style>
+
+<!-- REPORT HEADER -->
+<div class="report-header">
+  <h4>Primary Research · AI Industry Analysis · v3 (Final Run — Sep 22, 2026)</h4>
+  <h1>Mapping the First-Party AI Agent Landscape</h1>
+  <p style="font-size:1.05rem;color:var(--text-muted);margin-bottom:0.5rem;">
+    A structured, source-verified count of distinct autonomous AI agent products deployed by major technology companies — with scope definitions, de-duplication notes, and confidence assessment.
+  </p>
+  <div class="report-meta">
+    <span>Research cutoff: September 22, 2026</span>
+    <span>Version: 3.0 (final run Sep 22)</span>
+    <span>Scope: Big Tech + Selected AI-Native</span>
+    <span>Method: Primary sources + reputable reporting</span>
+  </div>
+</div>
+
+<div class="callout update">
+  <strong>v2 corrections (Sep 22, 2026):</strong> (1) OpenAI ChatGPT Agent Mode deprecated Aug 2026; ChatGPT Work + Workspace Agents added. (2) Anthropic Claude for Small Business added (May 2026). (3) Salesforce corrected 11 → 7 agents. (4) Microsoft +2: Copilot Tasks + Copilot Cowork. (5) Google: NotebookLM renamed Gemini Notebook.<br><br>
+  <strong>v3 corrections (Sep 22, 2026 — final run):</strong> Four additional updates from full re-verification: (1) <strong>Google AlphaEvolve added</strong> — GA on Google Cloud July 2026 (evolutionary code optimization agent, previously omitted). (2) <strong>OpenAI ChatGPT for Financial Services added</strong> — launched September 10, 2026, enterprise tier for Wall Street analysts (previously omitted). (3) <strong>ServiceNow expanded</strong> — 3 additional individually named AI Specialists from Knowledge 2026 Autonomous Workforce: AIOps Specialist, SRE Specialist, L1 IT Service Desk Specialist (previously undercounted). (4) <strong>Gemini Spark upgraded</strong> from Preview → Public — expanded to AI Pro subscribers in 160+ countries July 30, 2026.
+</div>
+
+<div class="callout warning">
+  <strong>Scope note:</strong> This report counts only <em>named, first-party AI agent products</em> — not customer-built agents on top of platforms, not underlying models, and not announced products not yet in active deployment. An exact global total cannot be determined; this report provides a defensible lower bound and a likely range. <strong>Agent definition:</strong> a product that can independently or semi-independently perform multi-step tasks using tools, browsing, code execution, or cross-application action in pursuit of a user-defined goal — beyond single-turn chat.
+</div>
+
+<!-- 1. EXECUTIVE SUMMARY -->
+<h2>1. Executive Summary</h2>
+
+<div class="stat-grid">
+  <div class="stat-tile">
+    <span class="num">14</span>
+    <span class="label">Confirmed public agents</span>
+  </div>
+  <div class="stat-tile">
+    <span class="num amber">47</span>
+    <span class="label">Enterprise / preview agents</span>
+  </div>
+  <div class="stat-tile">
+    <span class="num blue">~61</span>
+    <span class="label">Likely total (conservative)</span>
+  </div>
+  <div class="stat-tile">
+    <span class="num red">3</span>
+    <span class="label">Deprecated (excluded)</span>
+  </div>
+  <div class="stat-tile">
+    <span class="num" style="color:var(--text-muted)">12+</span>
+    <span class="label">Frameworks / SDKs (excluded)</span>
+  </div>
+</div>
+
+<p>As of September 22, 2026, this research identifies <strong>approximately 61 distinct named first-party AI agent products</strong> deployed or in active limited release across the 17 companies in scope — with a likely range of <strong>61–85</strong> if all Oracle Fusion Applications are counted individually and IBM's agent catalog contents become fully known. The confident lower bound (fully verifiable public sources) is <strong>42 agents</strong>. Key findings:</p>
+
+<ul>
+  <li><strong>OpenAI</strong> has three confirmed public agents: ChatGPT Deep Research, Codex, and ChatGPT Work (launched Jul 2026). ChatGPT Agent Mode was deprecated August 2026 and is excluded. Workspace Agents (Apr 2026) are in Enterprise/Business preview. ChatGPT for Financial Services launched Sep 10, 2026 as an enterprise-tier financial research agent.</li>
+  <li><strong>Microsoft</strong> has the largest named-agent catalog: at least 15 named agents across M365 Copilot and Dynamics 365, including new additions Copilot Tasks and Copilot Cowork (both GA 2026).</li>
+  <li><strong>Salesforce</strong> ships 7 clearly named pre-built Agentforce agents (Hunter, Piper, Casey, Carter, Paige, Marshall, Fin) following the September 2026 Agentforce 360 launch — corrected down from an earlier inflated estimate.</li>
+  <li><strong>Google</strong> has the broadest portfolio: 4 publicly available agents (Gemini Deep Research, Jules, Gemini Notebook, Gemini Spark — now GA for AI Pro subscribers in 160+ countries), plus a substantial enterprise layer including AlphaEvolve (code optimization, GA Jul 2026), 6 BigQuery agents, Gemini Code Assist, and Gemini Enterprise built-ins.</li>
+  <li><strong>Anthropic</strong> launched Claude for Small Business (May 2026) — a suite of 11 named first-party agentic workflows (Campaign Runner, Invoice Chaser, Contract Reviewer, etc.) through Claude Cowork. This is Anthropic's first consumer/SMB-facing named agent product line.</li>
+  <li><strong>Meta, IBM, NVIDIA, and Cohere</strong> have either zero verifiable first-party deployed agents or only frameworks/models. Mistral's Vibe Work Mode (May 2026) is its first clear deployment.</li>
+  <li><strong>Apple</strong> does not yet qualify: Siri's agentic features were in developer beta as of June 2026, with full consumer rollout still pending.</li>
+</ul>
+
+<p><strong>Confidence level: Medium.</strong> Public agents can be individually verified. Enterprise catalogs (particularly Oracle and IBM) are harder to fully enumerate without insider access.</p>
+
+<div class="confidence-bar">
+  <span style="font-size:0.82rem;width:130px;flex-shrink:0;">Public agents<br><em class="note">High confidence</em></span>
+  <div class="bar-track"><div class="bar-fill" style="width:90%;background:var(--accent)"></div></div>
+  <span style="font-size:0.82rem;font-family:var(--mono)">90%</span>
+</div>
+<div class="confidence-bar">
+  <span style="font-size:0.82rem;width:130px;flex-shrink:0;">Enterprise agents<br><em class="note">Medium confidence</em></span>
+  <div class="bar-track"><div class="bar-fill" style="width:62%;background:var(--amber)"></div></div>
+  <span style="font-size:0.82rem;font-family:var(--mono)">62%</span>
+</div>
+<div class="confidence-bar">
+  <span style="font-size:0.82rem;width:130px;flex-shrink:0;">Total count<br><em class="note">Lower bound</em></span>
+  <div class="bar-track"><div class="bar-fill" style="width:48%;background:var(--blue)"></div></div>
+  <span style="font-size:0.82rem;font-family:var(--mono)">48%</span>
+</div>
+
+<!-- 2. COMPANY-BY-COMPANY TABLE -->
+<h2>2. Company-by-Company Catalog</h2>
+
+<div class="section-intro">
+  <strong>Categories:</strong>&nbsp;
+  <span class="badge badge-public">Public</span> = General subscription / free tier.&nbsp;
+  <span class="badge badge-enterprise">Enterprise</span> = Enterprise contract / specific business plan.&nbsp;
+  <span class="badge badge-preview">Preview</span> = Limited access / closed beta.&nbsp;
+  <span class="badge badge-deprecated">Deprecated</span> = Launched but since retired.&nbsp;
+  <span class="badge badge-research">Announced</span> = Not yet deployed.&nbsp;
+  <span class="badge badge-framework">Framework</span> = SDK / platform, excluded from count.
+</div>
+
+<div class="table-wrap">
+<table>
+  <thead>
+    <tr>
+      <th>Company</th>
+      <th>Agent / Product Name</th>
+      <th>Category</th>
+      <th>Type</th>
+      <th>Status / Date</th>
+      <th>Why It Qualifies as an Agent</th>
+      <th>In Total?</th>
+    </tr>
+  </thead>
+  <tbody>
+
+    <!-- OPENAI -->
+    <tr class="company-group"><td colspan="7">OpenAI</td></tr>
+    <tr>
+      <td></td>
+      <td><span class="agent-name">ChatGPT Deep Research</span></td>
+      <td><span class="badge badge-public">Public</span></td>
+      <td>Named agent mode in ChatGPT</td>
+      <td>Launched Feb 3, 2025. All paid tiers; 5 free queries/month.</td>
+      <td class="qualifies">Autonomously browses the web 5–30 min, processes PDFs/images, synthesizes cited reports without further prompting. Classified as an agent by OpenAI.</td>
+      <td><span class="badge badge-yes">Yes</span></td>
+    </tr>
+    <tr>
+      <td></td>
+      <td><span class="agent-name">Operator</span></td>
+      <td><span class="badge badge-deprecated">Deprecated</span></td>
+      <td>Standalone browser agent</td>
+      <td>Launched Jan 23, 2025 (US Pro only). Shut down Aug 31, 2025 — absorbed into ChatGPT Agent Mode.</td>
+      <td class="qualifies">Filled forms, placed orders, scheduled appointments autonomously. Multi-step browser task execution.</td>
+      <td><span class="badge badge-no">No — retired</span></td>
+    </tr>
+    <tr>
+      <td></td>
+      <td><span class="agent-name">ChatGPT Agent Mode</span></td>
+      <td><span class="badge badge-deprecated">Deprecated</span></td>
+      <td>Named agent mode in ChatGPT</td>
+      <td>Launched Jul 17, 2025. <strong>Deprecated August 2026</strong> — replaced by ChatGPT Work. Users redirected to ChatGPT Work for multi-step tasks.</td>
+      <td class="qualifies">Successor to Operator; unified browser navigation, web research, and action-taking. Deprecated; no longer active.</td>
+      <td><span class="badge badge-no">No — deprecated Aug 2026</span></td>
+    </tr>
+    <tr>
+      <td></td>
+      <td><span class="agent-name">ChatGPT Work</span></td>
+      <td><span class="badge badge-public">Public</span></td>
+      <td>Named agent mode in ChatGPT</td>
+      <td>Launched Jul 10, 2026. Pro, Enterprise, Edu immediately; Plus/Business within days. Mac + Windows desktop app.</td>
+      <td class="qualifies">Executes multi-step workplace tasks across apps and files — creates finished documents, spreadsheets, and presentations by gathering context from multiple sources autonomously. Includes built-in browser and computer use.</td>
+      <td><span class="badge badge-yes">Yes</span></td>
+    </tr>
+    <tr>
+      <td></td>
+      <td><span class="agent-name">Codex</span></td>
+      <td><span class="badge badge-public">Public</span></td>
+      <td>Named standalone coding agent</td>
+      <td>CLI open-sourced Apr 2025; cloud preview May 2025; merged into ChatGPT Jul 2026. 2M weekly active users by Mar 2026.</td>
+      <td class="qualifies">Runs in isolated cloud environments to read/edit files, execute commands, write tests, fix bugs, and propose PRs over 1–30 min sessions without per-step prompting.</td>
+      <td><span class="badge badge-yes">Yes</span></td>
+    </tr>
+    <tr>
+      <td></td>
+      <td><span class="agent-name">Workspace Agents</span></td>
+      <td><span class="badge badge-preview">Preview</span></td>
+      <td>Named multi-agent platform within ChatGPT</td>
+      <td>Research preview launched Apr 22, 2026. ChatGPT Business, Enterprise, Edu, Teachers plans. Credit-based pricing from May 6, 2026.</td>
+      <td class="qualifies">Cloud-hosted agents that operate independently of user availability; can gather context, follow processes, request approvals, and maintain memory. Teams can build shared agentic workflows integrating multiple business tools.</td>
+      <td><span class="badge badge-yes">Yes</span></td>
+    </tr>
+    <tr>
+      <td></td>
+      <td><span class="agent-name">ChatGPT for Financial Services</span></td>
+      <td><span class="badge badge-enterprise">Enterprise</span></td>
+      <td>Named specialized financial research agent</td>
+      <td>Launched Sep 10, 2026 (OpenAI Product Day). Enterprise tier. Integrates Daloopa, PitchBook, and LSEG News premium financial data natively.</td>
+      <td class="qualifies">Autonomously synthesizes multi-source financial data to produce investment analyses, due diligence reports, and market summaries — multi-step financial research agent targeting work previously done by junior bankers. Built on GPT-6 Astra.</td>
+      <td><span class="badge badge-yes">Yes</span></td>
+    </tr>
+
+    <!-- ANTHROPIC -->
+    <tr class="company-group"><td colspan="7">Anthropic</td></tr>
+    <tr>
+      <td></td>
+      <td><span class="agent-name">Claude Code</span></td>
+      <td><span class="badge badge-public">Public</span></td>
+      <td>Named standalone coding agent (CLI)</td>
+      <td>Research preview Feb 24, 2025; GA May 2025. Publicly available via Claude subscription.</td>
+      <td class="qualifies">Command-line tool that autonomously delegates software engineering tasks — reads entire codebases, writes and runs code, executes terminal commands, proposes git commits, manages multi-step workflows.</td>
+      <td><span class="badge badge-yes">Yes</span></td>
+    </tr>
+    <tr>
+      <td></td>
+      <td><span class="agent-name">Claude Cowork</span></td>
+      <td><span class="badge badge-public">Public</span></td>
+      <td>Named GUI agent platform</td>
+      <td>Available May 2025+. GUI-based agentic interface for non-technical users.</td>
+      <td class="qualifies">Enables autonomous file management, multi-step task orchestration, and agentic workflows via a graphical interface; maintains task context across sessions beyond single-turn chat.</td>
+      <td><span class="badge badge-yes">Yes</span></td>
+    </tr>
+    <tr>
+      <td></td>
+      <td><span class="agent-name">Claude for Small Business (11 named workflows)</span></td>
+      <td><span class="badge badge-public">Public</span></td>
+      <td>First-party named SMB agent suite</td>
+      <td>Launched May 13, 2026 via Claude Cowork. Connects to QuickBooks, PayPal, HubSpot, Canva, DocuSign, Google Workspace, M365.</td>
+      <td class="qualifies">15 ready-to-run agentic workflows including: Campaign Runner, Invoice Chaser, Payroll Planning, Monthly Close, Contract Reviewer, Lead Triager, Margin Analyzer, Business Pulse, Content Strategist, Tax Season Organizer, Month-End Prepper. First-party Anthropic products users toggle on — not templates for others to build. Each autonomously executes multi-step tasks with tool integrations.</td>
+      <td><span class="badge badge-yes">Yes — counted as 1 suite</span></td>
+    </tr>
+    <tr>
+      <td></td>
+      <td><span class="agent-name">Computer Use (API toolset)</span></td>
+      <td><span class="badge badge-enterprise">Enterprise</span></td>
+      <td>API capability / developer tool</td>
+      <td>Beta Oct 2024; GA August 19, 2026. Available for Claude Opus/Sonnet/Fable models via API.</td>
+      <td class="qualifies">Enables developers to build agents that control desktop screens — but is a developer API tool, not a named end-user agent product.</td>
+      <td><span class="badge badge-no">No — API tool</span></td>
+    </tr>
+    <tr>
+      <td></td>
+      <td><span class="agent-name">Browser Use (API toolset)</span></td>
+      <td><span class="badge badge-enterprise">Enterprise</span></td>
+      <td>API capability / developer tool</td>
+      <td>GA August 19, 2026 via Claude API.</td>
+      <td class="qualifies">Provides structured browser access for agent builders — same exclusion rationale as Computer Use.</td>
+      <td><span class="badge badge-no">No — API tool</span></td>
+    </tr>
+
+    <!-- GOOGLE -->
+    <tr class="company-group"><td colspan="7">Google / Google DeepMind</td></tr>
+    <tr>
+      <td></td>
+      <td><span class="agent-name">Gemini Deep Research</span></td>
+      <td><span class="badge badge-public">Public</span></td>
+      <td>Named agent mode in Gemini</td>
+      <td>Launched late 2024; expanded 2025. Available to Gemini Advanced / paid subscribers.</td>
+      <td class="qualifies">Autonomously browses and synthesizes web information across sources to produce research reports. Multi-step, tool-using, no per-step prompting required.</td>
+      <td><span class="badge badge-yes">Yes</span></td>
+    </tr>
+    <tr>
+      <td></td>
+      <td><span class="agent-name">Deep Research Max</span></td>
+      <td><span class="badge badge-preview">Preview</span></td>
+      <td>Named agent in Gemini API</td>
+      <td>Public preview via Gemini API paid tiers (2026). Built on Gemini 3.1 Pro.</td>
+      <td class="qualifies">Extended compute version of Deep Research with MCP support, native chart generation, and access to private data — separately named, optimized for asynchronous high-quality research.</td>
+      <td><span class="badge badge-yes">Yes</span></td>
+    </tr>
+    <tr>
+      <td></td>
+      <td><span class="agent-name">Jules</span></td>
+      <td><span class="badge badge-public">Public</span></td>
+      <td>Named standalone coding agent</td>
+      <td>Public since August 6, 2025 at jules.google. Free tier + Google AI Pro/Ultra.</td>
+      <td class="qualifies">Asynchronous coding agent powered by Gemini 2.5 Pro; creates coding plans, generates code, integrates with GitHub issues, supports multi-agent workflows, operates without continuous prompting.</td>
+      <td><span class="badge badge-yes">Yes</span></td>
+    </tr>
+    <tr>
+      <td></td>
+      <td><span class="agent-name">Gemini Spark</span></td>
+      <td><span class="badge badge-public">Public</span></td>
+      <td>Named standalone personal agent</td>
+      <td>Announced Google I/O May 19, 2026; GA for Google AI Pro/Ultra subscribers. Expanded to 160+ countries Jul 30, 2026. Chrome web-browsing integration added Jul 2026.</td>
+      <td class="qualifies">24/7 personal agentic assistant on dedicated Cloud VMs; takes actions in Gmail/Workspace/Chrome/external services via MCP with minimal oversight. Explicitly called an "agent" by Sundar Pichai.</td>
+      <td><span class="badge badge-yes">Yes</span></td>
+    </tr>
+    <tr>
+      <td></td>
+      <td><span class="agent-name">Gemini Notebook (formerly NotebookLM)</span></td>
+      <td><span class="badge badge-public">Public</span></td>
+      <td>Named research agent tool</td>
+      <td>Renamed from NotebookLM to Gemini Notebook July 16, 2026. Agentic research update June 8, 2026 (Gemini 3.5, code-running notebooks).</td>
+      <td class="qualifies">AI research tool with agentic research capabilities added June 2026 — can autonomously gather and synthesize information from connected sources across multi-step research sessions.</td>
+      <td><span class="badge badge-yes">Yes</span></td>
+    </tr>
+    <tr>
+      <td></td>
+      <td><span class="agent-name">Gemini Code Assist (Agent Mode)</span></td>
+      <td><span class="badge badge-enterprise">Enterprise</span></td>
+      <td>Agent mode within dev tool</td>
+      <td>Agent mode launched June 2025. Available in Google Cloud enterprise plans and IDE integrations.</td>
+      <td class="qualifies">Agentic coding pair programmer that understands intent, breaks down tasks, writes and runs code, and handles multi-file changes across a codebase autonomously.</td>
+      <td><span class="badge badge-yes">Yes</span></td>
+    </tr>
+    <tr>
+      <td></td>
+      <td><span class="agent-name">Gemini Enterprise — Built-in Agents (2 agents)</span></td>
+      <td><span class="badge badge-enterprise">Enterprise</span></td>
+      <td>Pre-built agents in enterprise platform</td>
+      <td>GA via Google Cloud (formerly Agentspace, renamed Gemini Enterprise Oct 2025).</td>
+      <td class="qualifies">Deep Research agent + Idea Generation agent — 2 named first-party expert agents accessible to enterprise orgs via Gemini Enterprise Agent Platform.</td>
+      <td><span class="badge badge-yes">Yes — 2 agents</span></td>
+    </tr>
+    <tr>
+      <td></td>
+      <td><span class="agent-name">BigQuery Agents (6 agents)</span></td>
+      <td><span class="badge badge-enterprise">Enterprise</span></td>
+      <td>Pre-built data engineering agents</td>
+      <td>GA announced at Google Cloud Next 2026. Part of Google Cloud BigQuery product line.</td>
+      <td class="qualifies">Suite of 6 agents automating data pipeline creation, code interpretation, query execution, and visualization — independently generate and run code on datasets.</td>
+      <td><span class="badge badge-yes">Yes — 6 agents</span></td>
+    </tr>
+    <tr>
+      <td></td>
+      <td><span class="agent-name">AlphaEvolve</span></td>
+      <td><span class="badge badge-enterprise">Enterprise</span></td>
+      <td>Named autonomous code optimization agent</td>
+      <td>GA on Google Cloud July 2026. Available to all Google Cloud customers via Gemini Enterprise.</td>
+      <td class="qualifies">Evolutionary algorithm agent: given a baseline algorithm and optimization goals, autonomously searches for better solutions across generations — multi-step unattended code optimization returning human-readable, verified improvements.</td>
+      <td><span class="badge badge-yes">Yes</span></td>
+    </tr>
+    <tr>
+      <td></td>
+      <td><span class="agent-name">Project Mariner</span></td>
+      <td><span class="badge badge-deprecated">Deprecated</span></td>
+      <td>Browser automation agent</td>
+      <td>Research prototype Dec 2024; stable May 2025. Discontinued May 4, 2026.</td>
+      <td class="qualifies">Chrome extension navigating websites for up to 10 concurrent tasks. Clearly autonomous multi-step agent — excluded as discontinued.</td>
+      <td><span class="badge badge-no">No — discontinued</span></td>
+    </tr>
+    <tr>
+      <td></td>
+      <td><span class="agent-name">Workspace Studio (agent builder)</span></td>
+      <td><span class="badge badge-framework">Framework</span></td>
+      <td>Agent-building platform</td>
+      <td>Rolling out to Workspace business/enterprise from Cloud Next 2026.</td>
+      <td class="qualifies">No-code agent builder for creating recurring autonomous workflows — platform, not a named first-party agent.</td>
+      <td><span class="badge badge-no">No — platform</span></td>
+    </tr>
+
+    <!-- xAI -->
+    <tr class="company-group"><td colspan="7">xAI</td></tr>
+    <tr>
+      <td></td>
+      <td><span class="agent-name">Grok DeepSearch</span></td>
+      <td><span class="badge badge-public">Public</span></td>
+      <td>Agent mode within Grok</td>
+      <td>Launched Feb 17, 2025 with Grok 3. Available to paid Grok subscribers via UI toggle.</td>
+      <td class="qualifies">Fires iterative retrieval loop: splits queries into sub-queries, runs parallel searches across web and X, follows links, checks up to 7 consistency layers, synthesizes up to 10 iteration steps. Autonomously invokes server-side tools.</td>
+      <td><span class="badge badge-yes">Yes</span></td>
+    </tr>
+    <tr>
+      <td></td>
+      <td><span class="agent-name">Grok Build</span></td>
+      <td><span class="badge badge-research">Announced</span></td>
+      <td>Coding agent (pre-launch)</td>
+      <td>Pre-launch as of research cutoff. Described as spawning up to 8 concurrent coding agents.</td>
+      <td class="qualifies">Not yet deployed — excluded from count.</td>
+      <td><span class="badge badge-no">No — not deployed</span></td>
+    </tr>
+
+    <!-- MICROSOFT -->
+    <tr class="company-group"><td colspan="7">Microsoft</td></tr>
+    <tr>
+      <td></td>
+      <td><span class="agent-name">Copilot Tasks</span></td>
+      <td><span class="badge badge-enterprise">Enterprise</span></td>
+      <td>First-party agent in M365 Copilot</td>
+      <td>GA February 26, 2026. Available to M365 Copilot subscribers. Runs in the cloud, not locally.</td>
+      <td class="qualifies">Performs multi-step actions automatically on a schedule — organizes email, books travel, prepares for recurring meetings. Autonomous scheduled task execution without continuous prompting.</td>
+      <td><span class="badge badge-yes">Yes</span></td>
+    </tr>
+    <tr>
+      <td></td>
+      <td><span class="agent-name">Copilot Cowork</span></td>
+      <td><span class="badge badge-enterprise">Enterprise</span></td>
+      <td>First-party cross-app agent in M365</td>
+      <td>Announced Mar 9, 2026; GA June 16, 2026. M365 Copilot subscription, metered credit-based billing.</td>
+      <td class="qualifies">Executes autonomous cross-application actions throughout M365 (Word, Excel, Outlook, Teams) — gathers SharePoint data, drafts documents, formats spreadsheets, queues items for team review without per-step prompting. Runs on Anthropic Claude model.</td>
+      <td><span class="badge badge-yes">Yes</span></td>
+    </tr>
+    <tr>
+      <td></td>
+      <td><span class="agent-name">M365 Copilot — Researcher</span></td>
+      <td><span class="badge badge-enterprise">Enterprise</span></td>
+      <td>First-party agent in M365 Copilot</td>
+      <td>GA (M365 Copilot subscription at $30/user/month).</td>
+      <td class="qualifies">Tackles complex multi-step research across work data and the web — autonomous information gathering and synthesis beyond single-turn assistance.</td>
+      <td><span class="badge badge-yes">Yes</span></td>
+    </tr>
+    <tr>
+      <td></td>
+      <td><span class="agent-name">M365 Copilot — Analyst</span></td>
+      <td><span class="badge badge-enterprise">Enterprise</span></td>
+      <td>First-party agent in M365 Copilot</td>
+      <td>GA with M365 Copilot subscription.</td>
+      <td class="qualifies">Converts raw enterprise data into insights using analytics-optimized models; executes multi-step data analysis autonomously.</td>
+      <td><span class="badge badge-yes">Yes</span></td>
+    </tr>
+    <tr>
+      <td></td>
+      <td><span class="agent-name">M365 Copilot — People Agent</span></td>
+      <td><span class="badge badge-enterprise">Enterprise</span></td>
+      <td>First-party agent in M365 Copilot</td>
+      <td>GA with M365 Copilot subscription.</td>
+      <td class="qualifies">Surfaces people-related insights and colleague connections by querying organizational data across multiple sources.</td>
+      <td><span class="badge badge-yes">Yes</span></td>
+    </tr>
+    <tr>
+      <td></td>
+      <td><span class="agent-name">M365 Copilot — Workflows Agent</span></td>
+      <td><span class="badge badge-enterprise">Enterprise</span></td>
+      <td>First-party agent in M365 Copilot</td>
+      <td>GA with M365 Copilot subscription.</td>
+      <td class="qualifies">Automates personal and team workflows within Microsoft 365 by chaining steps across applications autonomously.</td>
+      <td><span class="badge badge-yes">Yes</span></td>
+    </tr>
+    <tr>
+      <td></td>
+      <td><span class="agent-name">M365 Copilot — Learning Agent</span></td>
+      <td><span class="badge badge-enterprise">Enterprise</span></td>
+      <td>First-party agent in M365 Copilot</td>
+      <td>GA with M365 Copilot subscription.</td>
+      <td class="qualifies">Delivers personalized role-specific training by identifying skill gaps and orchestrating learning content — multi-step context-aware execution.</td>
+      <td><span class="badge badge-yes">Yes</span></td>
+    </tr>
+    <tr>
+      <td></td>
+      <td><span class="agent-name">M365 Copilot — Workforce Insights Agent</span></td>
+      <td><span class="badge badge-enterprise">Enterprise</span></td>
+      <td>First-party agent in M365 Copilot</td>
+      <td>GA with M365 Copilot subscription.</td>
+      <td class="qualifies">Provides workforce planning analytics; autonomously aggregates and analyzes data from multiple HR and productivity systems.</td>
+      <td><span class="badge badge-yes">Yes</span></td>
+    </tr>
+    <tr>
+      <td></td>
+      <td><span class="agent-name">D365 — Sales Agent</span></td>
+      <td><span class="badge badge-enterprise">Enterprise</span></td>
+      <td>First-party D365 agent</td>
+      <td>GA July 7, 2026. Available in M365 Copilot, Outlook, Teams, D365.</td>
+      <td class="qualifies">Autonomously provides account summaries, opportunity context, post-meeting CRM capture; logs objections and commitments into CRM without manual input via MCP-grounded live data.</td>
+      <td><span class="badge badge-yes">Yes</span></td>
+    </tr>
+    <tr>
+      <td></td>
+      <td><span class="agent-name">D365 — Service Agent</span></td>
+      <td><span class="badge badge-enterprise">Enterprise</span></td>
+      <td>First-party D365 agent</td>
+      <td>GA July 7, 2026. Available in M365 Copilot and D365.</td>
+      <td class="qualifies">Generates case summaries, surfaces next-best-actions, drafts resolution emails, updates records autonomously within agent interface grounded in live CRM data.</td>
+      <td><span class="badge badge-yes">Yes</span></td>
+    </tr>
+    <tr>
+      <td></td>
+      <td><span class="agent-name">D365 — Sales Qualification Agent</span></td>
+      <td><span class="badge badge-preview">Preview</span></td>
+      <td>First-party D365 agent</td>
+      <td>Preview (staged regional rollout as of research cutoff).</td>
+      <td class="qualifies">Researches leads, prioritizes opportunities, operates autonomously to qualify and hand off — multi-step CRM-integrated agent.</td>
+      <td><span class="badge badge-yes">Yes</span></td>
+    </tr>
+    <tr>
+      <td></td>
+      <td><span class="agent-name">D365 — Case Management Agent</span></td>
+      <td><span class="badge badge-preview">Preview</span></td>
+      <td>First-party D365 agent</td>
+      <td>Preview (staged regional rollout).</td>
+      <td class="qualifies">Automates entire case lifecycle: creation, enrichment, updates, follow-ups, and optional autonomous resolution.</td>
+      <td><span class="badge badge-yes">Yes</span></td>
+    </tr>
+    <tr>
+      <td></td>
+      <td><span class="agent-name">D365 — Customer Intent Agent</span></td>
+      <td><span class="badge badge-preview">Preview</span></td>
+      <td>First-party D365 agent</td>
+      <td>Preview.</td>
+      <td class="qualifies">Discovers and maintains a library of customer intents from historic and live interactions; multi-step analysis across interaction data.</td>
+      <td><span class="badge badge-yes">Yes</span></td>
+    </tr>
+    <tr>
+      <td></td>
+      <td><span class="agent-name">D365 — Customer Knowledge Management Agent</span></td>
+      <td><span class="badge badge-preview">Preview</span></td>
+      <td>First-party D365 agent</td>
+      <td>Preview.</td>
+      <td class="qualifies">Auto-generates and maintains knowledge articles from cases and conversations in real time — autonomous content creation loop.</td>
+      <td><span class="badge badge-yes">Yes</span></td>
+    </tr>
+    <tr>
+      <td></td>
+      <td><span class="agent-name">D365 — Account Reconciliation Agent</span></td>
+      <td><span class="badge badge-enterprise">Enterprise</span></td>
+      <td>First-party D365 agent</td>
+      <td>Available in D365 Finance.</td>
+      <td class="qualifies">Automates financial transaction reconciliation — multi-step data matching, discrepancy detection, and resolution across financial systems.</td>
+      <td><span class="badge badge-yes">Yes</span></td>
+    </tr>
+    <tr>
+      <td></td>
+      <td><span class="agent-name">D365 — Supplier Communications Agent</span></td>
+      <td><span class="badge badge-enterprise">Enterprise</span></td>
+      <td>First-party D365 agent</td>
+      <td>Available in D365 Supply Chain.</td>
+      <td class="qualifies">Autonomously manages supplier communication sequences, follow-ups, and data updates across supply chain systems.</td>
+      <td><span class="badge badge-yes">Yes</span></td>
+    </tr>
+    <tr>
+      <td></td>
+      <td><span class="agent-name">Copilot Studio</span></td>
+      <td><span class="badge badge-framework">Framework</span></td>
+      <td>Agent-building platform</td>
+      <td>GA and evolving; available with Power Platform licensing.</td>
+      <td class="qualifies">Low-code platform for building custom agents — not itself an agent. Excluded from count.</td>
+      <td><span class="badge badge-no">No — platform</span></td>
+    </tr>
+
+    <!-- META -->
+    <tr class="company-group"><td colspan="7">Meta</td></tr>
+    <tr>
+      <td></td>
+      <td><span class="agent-name">Meta AI</span></td>
+      <td><span class="badge badge-public">Public</span></td>
+      <td>AI assistant (not agent)</td>
+      <td>Rolling out across WhatsApp, Messenger, Instagram, Facebook, web, Ray-Ban glasses.</td>
+      <td class="qualifies">Primarily conversational assistant. Does not autonomously execute multi-step tasks using tools, browse independently, or take cross-application actions. Excluded as chatbot, not agent.</td>
+      <td><span class="badge badge-no">No — chatbot</span></td>
+    </tr>
+
+    <!-- AMAZON -->
+    <tr class="company-group"><td colspan="7">Amazon / AWS</td></tr>
+    <tr>
+      <td></td>
+      <td><span class="agent-name">Amazon Q Business (Agent Mode)</span></td>
+      <td><span class="badge badge-enterprise">Enterprise</span></td>
+      <td>Named enterprise AI agent</td>
+      <td>GA. Enterprise subscription. Connects to 40+ data sources.</td>
+      <td class="qualifies">Autonomous enterprise assistant that answers questions, creates content, takes actions across connected business applications — multi-step, tool-using, cross-application execution grounded in enterprise data.</td>
+      <td><span class="badge badge-yes">Yes</span></td>
+    </tr>
+    <tr>
+      <td></td>
+      <td><span class="agent-name">Amazon Bedrock Agents</span></td>
+      <td><span class="badge badge-framework">Framework</span></td>
+      <td>Agent-building platform (AWS)</td>
+      <td>GA. Part of AWS Bedrock platform.</td>
+      <td class="qualifies">Platform for building agents on top of foundation models — enables customers to build agents, is not itself a named first-party agent product.</td>
+      <td><span class="badge badge-no">No — platform</span></td>
+    </tr>
+    <tr>
+      <td></td>
+      <td><span class="agent-name">Amazon AgentCore</span></td>
+      <td><span class="badge badge-framework">Framework</span></td>
+      <td>Agent infrastructure platform</td>
+      <td>Announced 2026. AWS managed infrastructure for running agents at scale.</td>
+      <td class="qualifies">Infrastructure layer for agent deployment — not a named first-party agent product.</td>
+      <td><span class="badge badge-no">No — platform</span></td>
+    </tr>
+
+    <!-- APPLE -->
+    <tr class="company-group"><td colspan="7">Apple</td></tr>
+    <tr>
+      <td></td>
+      <td><span class="agent-name">Apple Intelligence / Siri (agentic features)</span></td>
+      <td><span class="badge badge-research">Announced</span></td>
+      <td>Planned personal agent</td>
+      <td>Developer beta as of June 2026. Full consumer agentic rollout still pending.</td>
+      <td class="qualifies">Announced capabilities (cross-app actions, autonomous task completion) qualify under definition — but not yet fully deployed as consumer agent. Excluded pending full rollout.</td>
+      <td><span class="badge badge-no">No — not fully deployed</span></td>
+    </tr>
+
+    <!-- PERPLEXITY -->
+    <tr class="company-group"><td colspan="7">Perplexity</td></tr>
+    <tr>
+      <td></td>
+      <td><span class="agent-name">Perplexity Deep Research</span></td>
+      <td><span class="badge badge-public">Public</span></td>
+      <td>Named agent mode in Perplexity</td>
+      <td>Launched Feb 14, 2025. Pro subscribers (5/day); limited free. Available via web and mobile.</td>
+      <td class="qualifies">Runs multi-step research: generates subqueries, executes iterative web searches, reads source documents, synthesizes 2–4 page reports with citations. Autonomous, tool-using research agent.</td>
+      <td><span class="badge badge-yes">Yes</span></td>
+    </tr>
+    <tr>
+      <td></td>
+      <td><span class="agent-name">Perplexity Assistant</span></td>
+      <td><span class="badge badge-public">Public</span></td>
+      <td>Named personal agent (mobile-first)</td>
+      <td>Launched Nov 2024. Available on Android first, then iOS; Pro subscribers.</td>
+      <td class="qualifies">Takes multi-step phone actions: books restaurants, sets reminders, queries live data, sends messages autonomously on behalf of users — cross-application phone-level agent.</td>
+      <td><span class="badge badge-yes">Yes</span></td>
+    </tr>
+
+    <!-- MISTRAL -->
+    <tr class="company-group"><td colspan="7">Mistral</td></tr>
+    <tr>
+      <td></td>
+      <td><span class="agent-name">Le Chat — Vibe Work Mode</span></td>
+      <td><span class="badge badge-public">Public</span></td>
+      <td>Named agent mode in Le Chat</td>
+      <td>Launched May 2026 (renamed from "Le Chat" to "Vibe" for its work mode). Free and paid tiers.</td>
+      <td class="qualifies">Autonomous work mode within Le Chat — builds web apps, analyzes data, generates and executes code, creates presentations; runs computer-use tasks from a single prompt across multiple steps.</td>
+      <td><span class="badge badge-yes">Yes</span></td>
+    </tr>
+
+    <!-- COHERE -->
+    <tr class="company-group"><td colspan="7">Cohere</td></tr>
+    <tr>
+      <td></td>
+      <td><span class="agent-name">Command A+ (API agent capabilities)</span></td>
+      <td><span class="badge badge-enterprise">Enterprise</span></td>
+      <td>Model with built-in agent tooling</td>
+      <td>API available to enterprise customers.</td>
+      <td class="qualifies">Multi-step tool use and RAG built into Command A+ API, but Cohere does not ship a named first-party agent product — only the model and APIs for enterprises to build. Excluded from count.</td>
+      <td><span class="badge badge-no">No — model/API only</span></td>
+    </tr>
+
+    <!-- ADOBE -->
+    <tr class="company-group"><td colspan="7">Adobe</td></tr>
+    <tr>
+      <td></td>
+      <td><span class="agent-name">Adobe Firefly Agent</span></td>
+      <td><span class="badge badge-enterprise">Enterprise</span></td>
+      <td>Named creative automation agent</td>
+      <td>GA as part of Adobe Experience Platform / Creative Cloud enterprise plans.</td>
+      <td class="qualifies">Autonomously executes multi-step creative production workflows: analyzes brand guidelines, generates and iterates on creative assets across channels, takes actions in Photoshop/Premiere/Express without per-step prompts.</td>
+      <td><span class="badge badge-yes">Yes</span></td>
+    </tr>
+
+    <!-- SALESFORCE -->
+    <tr class="company-group"><td colspan="7">Salesforce</td></tr>
+    <tr>
+      <td></td>
+      <td><span class="agent-name">Agentforce — Piper (Inbound Sales)</span></td>
+      <td><span class="badge badge-enterprise">Enterprise</span></td>
+      <td>Named first-party Agentforce agent</td>
+      <td>GA. Launched as part of Agentforce 360, September 2026.</td>
+      <td class="qualifies">Inbound pipeline generation agent converting prospect interest into qualified opportunities — multi-step, autonomous sales execution without manual follow-up delays.</td>
+      <td><span class="badge badge-yes">Yes</span></td>
+    </tr>
+    <tr>
+      <td></td>
+      <td><span class="agent-name">Agentforce — Casey (Customer Service)</span></td>
+      <td><span class="badge badge-enterprise">Enterprise</span></td>
+      <td>Named first-party Agentforce agent</td>
+      <td>GA. Launched as part of Agentforce 360, September 2026.</td>
+      <td class="qualifies">Manages resolution workflows at scale across customer interactions — autonomous multi-step service execution.</td>
+      <td><span class="badge badge-yes">Yes</span></td>
+    </tr>
+    <tr>
+      <td></td>
+      <td><span class="agent-name">Agentforce — Carter (Commerce)</span></td>
+      <td><span class="badge badge-enterprise">Enterprise</span></td>
+      <td>Named first-party Agentforce agent</td>
+      <td>GA. Launched as part of Agentforce 360, September 2026.</td>
+      <td class="qualifies">Commerce-focused agent supporting order management, returns, and customer engagement in e-commerce — autonomous multi-step transactional workflows.</td>
+      <td><span class="badge badge-yes">Yes</span></td>
+    </tr>
+    <tr>
+      <td></td>
+      <td><span class="agent-name">Agentforce — Paige (Internal Ops)</span></td>
+      <td><span class="badge badge-enterprise">Enterprise</span></td>
+      <td>Named first-party Agentforce agent</td>
+      <td>GA. Launched as part of Agentforce 360, September 2026.</td>
+      <td class="qualifies">IT and HR support agent navigating systems, policies, and workflows — autonomous multi-step employee-facing service execution.</td>
+      <td><span class="badge badge-yes">Yes</span></td>
+    </tr>
+    <tr>
+      <td></td>
+      <td><span class="agent-name">Agentforce — Marshall (Supply Chain)</span></td>
+      <td><span class="badge badge-enterprise">Enterprise</span></td>
+      <td>Named first-party Agentforce agent</td>
+      <td>GA. Launched as part of Agentforce 360, September 2026.</td>
+      <td class="qualifies">Supply chain operations agent monitoring and acting on logistics, procurement, and fulfillment data — autonomous multi-step operations execution.</td>
+      <td><span class="badge badge-yes">Yes</span></td>
+    </tr>
+    <tr>
+      <td></td>
+      <td><span class="agent-name">Agentforce — Fin (Customer Experience)</span></td>
+      <td><span class="badge badge-enterprise">Enterprise</span></td>
+      <td>Named first-party Agentforce agent</td>
+      <td>GA from acquisition. Salesforce acquired Fin platform September 10, 2026; integrated into Agentforce 360.</td>
+      <td class="qualifies">Customer experience agent with established base of 30,000+ companies. Multi-step autonomous customer interaction management.</td>
+      <td><span class="badge badge-yes">Yes</span></td>
+    </tr>
+    <tr>
+      <td></td>
+      <td><span class="agent-name">Agentforce — Hunter (Outbound Sales)</span></td>
+      <td><span class="badge badge-preview">Preview</span></td>
+      <td>Named first-party Agentforce agent</td>
+      <td>Pilot as of September 2026; GA planned November 2026.</td>
+      <td class="qualifies">Outbound sales agent working pipeline from research to outreach across extended cycles — multi-step autonomous sales execution. Currently in limited pilot.</td>
+      <td><span class="badge badge-yes">Yes — pilot</span></td>
+    </tr>
+    <tr>
+      <td></td>
+      <td><span class="agent-name">Agentforce (platform)</span></td>
+      <td><span class="badge badge-framework">Framework</span></td>
+      <td>Agent-building platform</td>
+      <td>GA. Underlying platform for building custom agents on Salesforce data.</td>
+      <td class="qualifies">Enables customers to build their own agents — not itself a named first-party agent. Excluded.</td>
+      <td><span class="badge badge-no">No — platform</span></td>
+    </tr>
+
+    <!-- SERVICENOW -->
+    <tr class="company-group"><td colspan="7">ServiceNow</td></tr>
+    <tr>
+      <td></td>
+      <td><span class="agent-name">Now Assist — IT Operations Agent</span></td>
+      <td><span class="badge badge-enterprise">Enterprise</span></td>
+      <td>Named first-party Now Assist agent</td>
+      <td>GA. Part of Now Platform enterprise licensing.</td>
+      <td class="qualifies">Autonomously handles incident triage, root cause analysis, and remediation actions across IT operations — multi-step ITSM workflow execution without manual hand-holding.</td>
+      <td><span class="badge badge-yes">Yes</span></td>
+    </tr>
+    <tr>
+      <td></td>
+      <td><span class="agent-name">Now Assist — HR Service Delivery Agent</span></td>
+      <td><span class="badge badge-enterprise">Enterprise</span></td>
+      <td>Named first-party Now Assist agent</td>
+      <td>GA. Part of Now Platform enterprise licensing.</td>
+      <td class="qualifies">Handles employee HR requests autonomously — case creation, knowledge retrieval, policy lookup, escalation — multi-step service delivery without manual routing.</td>
+      <td><span class="badge badge-yes">Yes</span></td>
+    </tr>
+    <tr>
+      <td></td>
+      <td><span class="agent-name">AIOps Specialist</span></td>
+      <td><span class="badge badge-enterprise">Enterprise</span></td>
+      <td>Named AI Specialist (Autonomous Workforce)</td>
+      <td>GA June 2026. ServiceNow Knowledge 2026 Autonomous Workforce announcement.</td>
+      <td class="qualifies">Autonomously detects anomalies, correlates events across IT systems, and triggers remediation — end-to-end multi-step incident detection and response with no manual alert-by-alert triage.</td>
+      <td><span class="badge badge-yes">Yes</span></td>
+    </tr>
+    <tr>
+      <td></td>
+      <td><span class="agent-name">SRE Specialist</span></td>
+      <td><span class="badge badge-enterprise">Enterprise</span></td>
+      <td>Named AI Specialist (Autonomous Workforce)</td>
+      <td>GA June 2026. ServiceNow Knowledge 2026 Autonomous Workforce announcement.</td>
+      <td class="qualifies">Handles incident triage and postmortem documentation end-to-end — autonomously manages the full SRE incident lifecycle without manual handoffs between triage, escalation, and documentation steps.</td>
+      <td><span class="badge badge-yes">Yes</span></td>
+    </tr>
+    <tr>
+      <td></td>
+      <td><span class="agent-name">L1 IT Service Desk Specialist</span></td>
+      <td><span class="badge badge-enterprise">Enterprise</span></td>
+      <td>Named AI Specialist (Autonomous Workforce)</td>
+      <td>GA (pre-Knowledge 2026). Part of ServiceNow Autonomous Workforce platform.</td>
+      <td class="qualifies">Resolves L1 IT support tickets 99% faster than human agents — autonomous ticket classification, knowledge retrieval, user guidance, and resolution without manual routing or human triage.</td>
+      <td><span class="badge badge-yes">Yes</span></td>
+    </tr>
+
+    <!-- ORACLE -->
+    <tr class="company-group"><td colspan="7">Oracle</td></tr>
+    <tr>
+      <td></td>
+      <td><span class="agent-name">Oracle Fusion — Financial Close Agent</span></td>
+      <td><span class="badge badge-enterprise">Enterprise</span></td>
+      <td>Named first-party Fusion agent</td>
+      <td>GA. Part of Oracle Fusion Cloud ERP suite.</td>
+      <td class="qualifies">Autonomously performs period-end close activities including journal entries, reconciliations, and variance analysis — multi-step, cross-module financial execution.</td>
+      <td><span class="badge badge-yes">Yes</span></td>
+    </tr>
+    <tr>
+      <td></td>
+      <td><span class="agent-name">Oracle Fusion — Procurement Agent</span></td>
+      <td><span class="badge badge-enterprise">Enterprise</span></td>
+      <td>Named first-party Fusion agent</td>
+      <td>GA. Part of Oracle Fusion Cloud SCM suite.</td>
+      <td class="qualifies">Manages supplier communications, purchase order exceptions, and approval workflows autonomously — multi-step supply chain execution.</td>
+      <td><span class="badge badge-yes">Yes</span></td>
+    </tr>
+    <tr>
+      <td></td>
+      <td><span class="agent-name">Oracle Fusion — HR Onboarding Agent</span></td>
+      <td><span class="badge badge-enterprise">Enterprise</span></td>
+      <td>Named first-party Fusion agent</td>
+      <td>GA. Part of Oracle Fusion Cloud HCM suite.</td>
+      <td class="qualifies">Orchestrates new hire onboarding across HR, IT, and facilities — multi-step cross-departmental autonomous workflow execution.</td>
+      <td><span class="badge badge-yes">Yes</span></td>
+    </tr>
+    <tr>
+      <td></td>
+      <td><span class="agent-name">Oracle Fusion — Additional Agentic Apps (up to 15 more)</span></td>
+      <td><span class="badge badge-enterprise">Enterprise</span></td>
+      <td>Named Fusion agents (incomplete catalog)</td>
+      <td>Oracle stated 18 total Fusion Agentic Applications across ERP, SCM, HCM as of 2026. Only 3 are individually named in public documentation.</td>
+      <td class="qualifies">The remaining 15 qualify under definition (multi-step autonomous ERP workflow agents) — but cannot be individually verified without Oracle account access. Excluded from conservative count; included in upper-bound scenario.</td>
+      <td><span class="badge badge-no">No — unverifiable catalog</span></td>
+    </tr>
+
+    <!-- IBM -->
+    <tr class="company-group"><td colspan="7">IBM</td></tr>
+    <tr>
+      <td></td>
+      <td><span class="agent-name">watsonx Orchestrate (agent catalog)</span></td>
+      <td><span class="badge badge-enterprise">Enterprise</span></td>
+      <td>Agent catalog / platform</td>
+      <td>GA. IBM Cloud enterprise licensing.</td>
+      <td class="qualifies">Contains pre-built first-party agents for HR, finance, and IT functions — but IBM does not publicly name individual agents in a verifiable count. Treated as 1 platform with unknown named agent count. Excluded from count pending catalog disclosure.</td>
+      <td><span class="badge badge-no">No — catalog not enumerable</span></td>
+    </tr>
+
+    <!-- NVIDIA -->
+    <tr class="company-group"><td colspan="7">NVIDIA</td></tr>
+    <tr>
+      <td></td>
+      <td><span class="agent-name">NVIDIA NIM / NeMo (Agent Frameworks)</span></td>
+      <td><span class="badge badge-framework">Framework</span></td>
+      <td>Agent development frameworks</td>
+      <td>GA as developer tools / cloud APIs.</td>
+      <td class="qualifies">Frameworks and inference microservices for building agents — NVIDIA does not ship a named consumer or enterprise first-party agent product. Excluded.</td>
+      <td><span class="badge badge-no">No — frameworks only</span></td>
+    </tr>
+
+  </tbody>
+</table>
+</div>
+
+<!-- 3. DE-DUPLICATION NOTES -->
+<h2>3. De-duplication, Exclusions &amp; Naming Notes</h2>
+
+<div class="dedup-list">
+  <ul>
+    <li><strong>OpenAI — three-name evolution:</strong> Operator (Jan 2025) → ChatGPT Agent Mode (Jul 2025) → ChatGPT Work (Jul 2026). Operator and ChatGPT Agent Mode are both deprecated. Only ChatGPT Work is counted as an active agent. Counted once (as ChatGPT Work).</li>
+    <li><strong>Google — NotebookLM → Gemini Notebook:</strong> Product renamed July 16, 2026. Same product, same agent capabilities. Counted once as Gemini Notebook Agent.</li>
+    <li><strong>Google — Agentspace → Gemini Enterprise:</strong> Product renamed October 2025. Counted once as Gemini Enterprise built-in agents (2 named agents).</li>
+    <li><strong>Salesforce — Agentforce 360 vs. prior Agentforce:</strong> The 7 named agents (Hunter, Piper, Casey, Carter, Paige, Marshall, Fin) represent the September 2026 named agent roster. Earlier Agentforce 1.0/2.0 role-based agents were consolidated or rebranded into this named cohort. Counted as 7 distinct named agents.</li>
+    <li><strong>Microsoft Copilot Studio:</strong> Excluded as a platform for building custom agents. The named first-party agents within M365 Copilot and D365 are counted separately.</li>
+    <li><strong>Anthropic — Financial Services Agents:</strong> The agents listed on Anthropic's financial services page (Investment Analyst Assistant, 10X Analyst, etc.) are third-party customer implementations using Claude, NOT Anthropic first-party products. Excluded. Claude for Small Business is a genuine first-party suite.</li>
+    <li><strong>Anthropic — Claude Managed Agents / Agent Teams:</strong> API infrastructure and multi-agent framework capabilities for developers — not named end-user deployed agent products. Excluded.</li>
+    <li><strong>Amazon Q vs. Bedrock Agents:</strong> Amazon Q Business (enterprise agent, first-party) is counted. Bedrock Agents (platform) and AgentCore (infrastructure) are excluded.</li>
+    <li><strong>IBM watsonx Orchestrate:</strong> Contains pre-built agents but individual names are not publicly enumerable. Treated conservatively as excluded from count.</li>
+    <li><strong>Oracle Fusion Agentic Apps:</strong> 3 are individually named and counted. Oracle stated 18 total — the unverified remainder is excluded from conservative count but appears in upper-bound scenario.</li>
+    <li><strong>Meta AI:</strong> Excluded as a conversational assistant. Does not autonomously execute multi-step tool-using tasks.</li>
+    <li><strong>Apple Siri:</strong> Excluded — agentic features were in developer beta only as of research cutoff.</li>
+    <li><strong>NVIDIA:</strong> Zero first-party named agent products. NIM and NeMo are frameworks.</li>
+    <li><strong>Cohere:</strong> Zero named first-party agent products. Command A+ is a model with agent-capable APIs, not a deployed agent.</li>
+  </ul>
+</div>
+
+<!-- 4. FINAL CALCULATION -->
+<h2>4. Final Calculation</h2>
+
+<div class="calc-box">
+  <div><strong>Public agents (consumer-accessible, no enterprise gate)</strong></div>
+  <div class="sub">OpenAI: ChatGPT Deep Research, ChatGPT Work, Codex ................................ 3</div>
+  <div class="sub">Google: Gemini Deep Research, Jules, Gemini Notebook, Gemini Spark .......... 4</div>
+  <div class="sub">xAI: Grok DeepSearch ................................................... 1</div>
+  <div class="sub">Perplexity: Deep Research, Assistant ..................................... 2</div>
+  <div class="sub">Anthropic: Claude Code, Claude Cowork, Small Business Suite ............... 3</div>
+  <div class="sub">Mistral: Vibe Work Mode .................................................. 1</div>
+  <div class="sub" style="margin-top:0.25rem;"><strong>Public subtotal: 14</strong></div>
+
+  <div style="margin-top:1rem;"><strong>Enterprise / Preview agents</strong></div>
+  <div class="sub">OpenAI: Workspace Agents, ChatGPT for Financial Services ................... 2</div>
+  <div class="sub">Google: Deep Research Max, AlphaEvolve, Code Assist, Enterprise Built-ins (×2), BigQuery (×6) ..... 11</div>
+  <div class="sub">Microsoft: Copilot Tasks, Copilot Cowork + M365 Copilot (×6) + D365 (×7) .... 15</div>
+  <div class="sub">Salesforce: Agentforce named agents (Piper, Casey, Carter, Paige, Marshall, Fin, Hunter) .... 7</div>
+  <div class="sub">Amazon: Amazon Q Business .............................................. 1</div>
+  <div class="sub">Adobe: Firefly Agent ................................................... 1</div>
+  <div class="sub">ServiceNow: IT Ops, HR, AIOps Specialist, SRE Specialist, L1 IT Specialist ... 5</div>
+  <div class="sub">Oracle: 3 named Fusion agents .......................................... 3</div>
+  <div class="sub" style="margin-top:0.25rem;"><strong>Enterprise / Preview subtotal: 45</strong></div>
+
+  <div class="total-line">Conservative verified total: ~59 named first-party agents</div>
+  <div class="sub" style="margin-top:0.5rem;">Deprecated / excluded from total: Operator, ChatGPT Agent Mode, Project Mariner (×3)</div>
+  <div class="sub">Frameworks / platforms excluded: Copilot Studio, Agentforce platform, Bedrock Agents, AgentCore, Oracle AI Agent Studio, IBM watsonx Orchestrate, Workspace Studio, NVIDIA NIM/NeMo (×12+)</div>
+</div>
+
+<div class="scenarios">
+  <div class="scenario low">
+    <span class="scenario-num">42</span>
+    <span class="scenario-label">Conservative Lower Bound</span>
+    <p class="scenario-desc">Only agents individually named and verified through primary source documentation, excluding any with catalog uncertainty. Updated from 38 with v3 additions.</p>
+  </div>
+  <div class="scenario mid">
+    <span class="scenario-num">~61</span>
+    <span class="scenario-label">Likely Estimate</span>
+    <p class="scenario-desc">All individually named agents plus the 7 Salesforce Agentforce named agents and 3 verified Oracle agents. Best-supported estimate as of September 22, 2026 (final run).</p>
+  </div>
+  <div class="scenario high">
+    <span class="scenario-num">85+</span>
+    <span class="scenario-label">Upper-Bound Scenario</span>
+    <p class="scenario-desc">Includes Oracle's full 18 Fusion Agentic Apps, IBM's unverified agent catalog, ServiceNow's full AI Specialist family count, and any M365 Copilot agents released in waves since the primary research window.</p>
+  </div>
+</div>
+
+<div class="callout info">
+  <strong>What would produce a more precise total:</strong> (1) Oracle publicly naming all 18 Fusion Agentic Applications, (2) IBM disclosing named agents within watsonx Orchestrate's pre-built catalog, (3) Apple completing its Siri agentic rollout, (4) A comprehensive release log of Microsoft's monthly M365 Copilot update waves, and (5) Grok Build achieving GA status.
+</div>
+
+<!-- 5. SOURCES -->
+<h2>5. Sources</h2>
+<div class="sources">
+  <ul>
+    <li><a href="https://openai.com/index/introducing-deep-research/" target="_blank">OpenAI: Introducing Deep Research</a></li>
+    <li><a href="https://openai.com/index/introducing-workspace-agents-in-chatgpt/" target="_blank">OpenAI: Workspace Agents in ChatGPT</a></li>
+    <li><a href="https://thenextweb.com/news/openai-chatgpt-work-agent-launch" target="_blank">The Next Web: ChatGPT Work agent launch</a></li>
+    <li><a href="https://www.usecarly.com/blog/chatgpt-agent-mode/" target="_blank">ChatGPT Agent Mode deprecated (Aug 2026)</a></li>
+    <li><a href="https://openai.com/index/codex-for-almost-everything/" target="_blank">OpenAI: Codex for almost everything</a></li>
+    <li><a href="https://en.wikipedia.org/wiki/OpenAI_Operator" target="_blank">OpenAI Operator (Wikipedia)</a></li>
+    <li><a href="https://www.anthropic.com/news/claude-for-small-business" target="_blank">Anthropic: Claude for Small Business</a></li>
+    <li><a href="https://www.anthropic.com/news/claude-for-financial-services" target="_blank">Anthropic: Claude for Financial Services</a></li>
+    <li><a href="https://linas.substack.com/p/anthropic-claude-2026-every-launch-guide" target="_blank">Everything Anthropic Shipped in 2026</a></li>
+    <li><a href="https://workspaceupdates.googleblog.com/2026/07/notebooklm-now-gemini-notebook.html" target="_blank">Google: NotebookLM renamed Gemini Notebook</a></li>
+    <li><a href="https://nerova.ai/news/google-notebooklm-june-8-2026-agentic-research-update" target="_blank">NotebookLM Agentic Research Update Jun 2026</a></li>
+    <li><a href="https://jules.google" target="_blank">Google Jules (jules.google)</a></li>
+    <li><a href="https://docs.cloud.google.com/gemini/enterprise/docs/release-notes" target="_blank">Gemini Enterprise Release Notes</a></li>
+    <li><a href="https://www.microsoft.com/en-us/microsoft-365/blog/2026/06/16/copilot-cowork-is-now-generally-available/" target="_blank">Microsoft: Copilot Cowork GA (Jun 2026)</a></li>
+    <li><a href="https://www.microsoft.com/en-us/microsoft-365/blog/2026/03/09/copilot-cowork-a-new-way-of-getting-work-done/" target="_blank">Microsoft: Copilot Cowork announcement</a></li>
+    <li><a href="https://leadershipinchange.com/p/4-ai-agents-copilot-microsoft-shipped" target="_blank">4 New Microsoft Copilot Agents (2026)</a></li>
+    <li><a href="https://learn.microsoft.com/en-us/microsoft-copilot-studio/whats-new" target="_blank">Microsoft Copilot Studio: What's New</a></li>
+    <li><a href="https://enterprisedna.co/resources/news/salesforce-agentforce-job-ready-agents-dreamforce-2026/" target="_blank">Salesforce: 7 Named Agentforce Agents (Sep 2026)</a></li>
+    <li><a href="https://kurums.com/salesforces-seven-named-ai-agents-what-the-september-2026-agentforce-360-launch-and-ai-control-plane-mean-for-enterprise-buyers/" target="_blank">Salesforce Agentforce 360 Analysis</a></li>
+    <li><a href="https://aiweekly.co/alerts/salesforce-ships-seven-named-agentforce-agents-cites-7b-awus" target="_blank">AI Weekly: Salesforce Ships 7 Named Agents</a></li>
+    <li><a href="https://www.salesforce.com/agentforce/" target="_blank">Salesforce Agentforce (official)</a></li>
+    <li><a href="https://news.microsoft.com/source/2026/06/09/kpmg-and-microsoft-scale-trusted-enterprise-ai-agents-globally-through-deployment-of-agent-365-and-copilot/" target="_blank">Microsoft: KPMG Agent 365 deployment</a></li>
+    <li><a href="https://en.wikipedia.org/wiki/NotebookLM" target="_blank">NotebookLM (Wikipedia)</a></li>
+    <li><a href="https://www.pymnts.com/news/artificial-intelligence/2026/anthropics-new-agents-product-pressures-a-crowded-startup-category" target="_blank">PYMNTS: Anthropic's New Agents Product</a></li>
+    <li><a href="https://redmondmag.com/articles/2026/06/16/microsoft-makes-copilot-cowork-generally-available-worldwide.aspx" target="_blank">Redmond Mag: Copilot Cowork GA</a></li>
+    <li><a href="https://www.epcgroup.net/blog/agentic-ai-microsoft-from-copilots-autonomous-agents-2026" target="_blank">EPC Group: Agentic AI on Microsoft 2026</a></li>
+    <li><a href="https://help.openai.com/en/articles/11794368-chatgpt-agent-release-notes" target="_blank">OpenAI: ChatGPT Agent Release Notes</a></li>
+    <li><a href="https://en.wikipedia.org/wiki/ChatGPT_Deep_Research" target="_blank">ChatGPT Deep Research (Wikipedia)</a></li>
+    <li><a href="https://cloud.google.com/blog/products/ai-machine-learning/alphaevolve-is-available-for-everyone" target="_blank">Google Cloud: AlphaEvolve generally available</a></li>
+    <li><a href="https://www.cnbc.com/2026/09/10/openai-chatgpt-for-financial-services-targets-work-of-junior-bankers.html" target="_blank">CNBC: OpenAI ChatGPT for Financial Services (Sep 10, 2026)</a></li>
+    <li><a href="https://thelettertwo.com/2026/05/05/servicenow-autonomous-workforce-ai-specialists-knowledge-2026/" target="_blank">ServiceNow Knowledge 2026: AI Specialists Announced</a></li>
+    <li><a href="https://9to5google.com/2026/07/30/gemini-spark-chrome-auto-browse/" target="_blank">9to5Google: Gemini Spark expands to 160+ countries (Jul 2026)</a></li>
+    <li><a href="https://en.wikipedia.org/wiki/Project_Mariner" target="_blank">Project Mariner discontinued (Wikipedia)</a></li>
+  </ul>
+</div>
+
+<hr>
+<p class="note">Research cutoff: September 22, 2026. Version 3.0 — final re-verification run September 22, 2026. This is independent research; no affiliation with any company mentioned. Agent counts represent a best-supported estimate, not a definitive census. Methodology: primary sources (official product pages, release notes, blogs) supplemented with reputable reporting. Conservative by design — announcements without confirmed deployment are excluded.</p>
